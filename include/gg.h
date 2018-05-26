@@ -9,5 +9,6 @@
 #define GG_H
 
 #include <iostream>
+#include "common.h"
 
 #endif /* !GG_H */
