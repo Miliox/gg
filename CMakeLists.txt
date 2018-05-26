@@ -7,7 +7,7 @@ add_definitions('-g')
 add_definitions('-Wall')
 add_definitions('-std=c++17')
 
-file(GLOB SOURCES src/*.cpp)
+file(GLOB SOURCES src/*.cpp test/*.cpp)
 include_directories(include)
 
 add_executable(${PROJECT_NAME} ${SOURCES})
