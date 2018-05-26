@@ -1,0 +1,73 @@
+/*
+ * apu.h
+ * Copyright (C) 2018 Emiliano Firmino <emiliano.firmino@gmail.com>
+ *
+ * Distributed under terms of the MIT license.
+ */
+
+#ifndef APU_H
+#define APU_H
+
+#include "common.h"
+
+namespace apu {
+
+// flags
+extern const u8 kFZ; // Flag Zero
+extern const u8 kFN; // Flag Negative
+extern const u8 kFH; // Flag Half Carry
+extern const u8 kFC; // Flag Carry
+
+// move operations
+
+u64 ld8(u8& dst, u8 src);
+u64 ld16(u16& dst, u16 src);
+
+// arithmetic operations
+
+u64 add8(u8& flags, u8& acc, u8 arg);
+u64 adc8(u8& flags, u8& acc, u8 arg);
+u64 sub8(u8& flags, u8& acc, u8 arg);
+u64 sbc8(u8& flags, u8& acc, u8 arg);
+u64 inc8(u8& flags, u8& acc);
+u64 dec8(u8& flags, u8& acc);
+
+u64 add16(u8& flags, u16& acc, u16 arg);
+u64 adc16(u8& flags, u16& acc, u16 arg);
+u64 sub16(u8& flags, u16& acc, u16 arg);
+u64 sbc16(u8& flags, u16& acc, u16 arg);
+u64 inc16(u8& flags, u16& acc);
+u64 dec16(u8& flags, u16& acc);
+
+// logical operation
+
+u64 land(u8& flags, u8& acc, u8 arg);
+u64 lxor(u8& flags, u8& acc, u8 arg);
+u64 lor( u8& flags, u8& acc, u8 arg);
+u64 lcp( u8& flags, u8& acc, u8 arg);
+u64 lcpl(u8& flags, u8& acc);
+u64 lscf(u8& flags, u8& acc);
+u64 lccf(u8& flags, u8& acc);
+
+// bit manipulation
+
+u64 rla(u8& flags, u8& acc);
+u64 rra(u8& flags, u8& acc);
+
+u64 sra(u8& flags, u8& acc);
+u64 srl(u8& flags, u8& acc);
+
+u64 rr(  u8& flags, u8& acc, u8 arg);
+u64 rlc( u8& flags, u8& acc, u8 arg);
+u64 rrc( u8& flags, u8& acc, u8 arg);
+u64 rlca(u8& flags, u8& acc);
+u64 rrca(u8& flags, u8& acc);
+
+u64 swap(u8& flags, u8& acc, u8 arg);
+u64 bit( u8& flags, u8& acc, u8 arg);
+u64 set( u8& flags, u8& acc, u8 arg);
+u64 res( u8& flags, u8& acc, u8 arg);
+
+}
+
+#endif /* !APU_H */
