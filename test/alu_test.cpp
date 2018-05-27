@@ -9,7 +9,7 @@
 
 #include "catch.hpp"
 
-static const char* tag = "[APU]";
+static const char* tag = "[ALU]";
 
 TEST_CASE("LD8", tag) {
     u8 a = 0;
