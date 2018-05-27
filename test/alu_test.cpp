@@ -36,3 +36,33 @@ TEST_CASE("ADD8 No Flags", tag) {
     REQUIRE(a == 1);
     REQUIRE(f == 0);
 }
+
+TEST_CASE("ADD8 Zero Flag", tag) {
+    u8 a = 0;
+    u8 b = 0;
+    u8 f = 0;
+    alu::add8(f, a, b);
+
+    REQUIRE(a == 0);
+    REQUIRE(f == 0x80);
+}
+
+TEST_CASE("ADD8 Half Flag", tag) {
+    u8 a = 0xf;
+    u8 b = 0xf;
+    u8 f = 0;
+    alu::add8(f, a, b);
+
+    REQUIRE(a == 0x1e);
+    REQUIRE(f == 0x20);
+}
+
+TEST_CASE("ADD8 Carry Flag", tag) {
+    u8 a = 0xf0;
+    u8 b = 0xf0;
+    u8 f = 0;
+    alu::add8(f, a, b);
+
+    REQUIRE(a == 0xe0);
+    REQUIRE(f == 0x10);
+}
