@@ -94,7 +94,7 @@ void alu::inc8(u8& flags, u8& acc) {
     u8 n = acc + 1;
 
     bool z = n == 0;
-    bool h = acc == 0xf;
+    bool h = (acc & 0xf) == 0xf;
 
     flags = cond_bitset(z, flags, alu::kFZ);
     flags = cond_bitset(0, flags, alu::kFN);
