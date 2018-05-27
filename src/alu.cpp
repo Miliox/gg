@@ -253,3 +253,117 @@ u64 alu::cpl(u8& flags, u8& acc) {
     acc = n;
     return 4;
 }
+
+u64 alu::rl(u8& flags, u8& acc) {
+    bool c = acc & 0x80;
+
+    u8 k = (flags & alu::kFC) ? 1 : 0;
+    u8 n = (acc << 1) | k;
+
+    bool z = n == 0;
+
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(0, flags, alu::kFH);
+    flags = cond_bitset(c, flags, alu::kFC);
+
+    acc = n;
+    return 4;
+}
+
+u64 alu::rr(u8& flags, u8& acc) {
+    bool c = acc & 0x01;
+
+    u8 k = (flags & alu::kFC) ? 0x80 : 0;
+    u8 n = (acc >> 1) | k;
+
+    bool z = n == 0;
+
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(0, flags, alu::kFH);
+    flags = cond_bitset(c, flags, alu::kFC);
+
+    acc = n;
+    return 4;
+}
+
+u64 alu::rlc(u8& flags, u8& acc) {
+    bool c = acc & 0x80;
+
+    un8 k = c ? 1 : 0;
+    un8 n = (acc << 1) | k;
+
+    bool z = n == 0;
+
+    flags = 0;
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(0, flags, alu::kFH);
+    flags = cond_bitset(c, flags, alu::kFC);
+
+    acc = n;
+    return 4;
+}
+
+u64 alu::rrc(u8& flags, u8& acc) {
+    bool c = acc & 0x01;
+
+    u8 k = c ? 0x80 : 0;
+    u8 n = (acc >> 1) | k;
+
+    bool z = n == 0;
+
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(0, flags, alu::kFH);
+    flags = cond_bitset(c, flags, alu::kFC);
+
+
+    acc = n;
+    return 4;
+}
+
+u64 alu::sla(u8& flags, u8& acc) {
+    u8 n = acc << 1;
+
+    bool z = n == 0;
+    bool c = acc & 0x80;
+
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(0, flags, alu::kFH);
+    flags = cond_bitset(c, flags, alu::kFC);
+
+    acc = n;
+    return 4;
+}
+
+u64 alu::sra(u8& flags, u8& acc) {
+    u8 n = (acc >> 1) | (acc & 0x80);
+
+    bool z = n == 0;
+
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(0, flags, alu::kFH);
+    flags = cond_bitset(0, flags, alu::kFC);
+
+    acc = n;
+    return 4;
+}
+
+u64 alu::srl(u8& flags, u8& acc) {
+    u8 n = acc >> 1;
+
+    bool z = n == 0;
+    bool c = acc & 1;
+
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(0, flags, alu::kFH);
+    flags = cond_bitset(c, flags, alu::kFC);
+
+    acc = n;
+    return 4;
+}

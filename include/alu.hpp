@@ -5,8 +5,8 @@
  * Distributed under terms of the MIT license.
  */
 
-#ifndef APU_H
-#define APU_H
+#ifndef ALU_H
+#define ALU_H
 
 #include "common.h"
 
@@ -53,15 +53,12 @@ u64 cpl(u8& flags, u8& acc);
 
 // bit rotation and shifts
 
-u64 rla( u8& flags, u8& acc);
-u64 rra( u8& flags, u8& acc);
-u64 rlca(u8& flags, u8& acc);
-u64 rrca(u8& flags, u8& acc);
+u64 rl(  u8& flags, u8& acc);
+u64 rr(  u8& flags, u8& acc);
+u64 rlc( u8& flags, u8& acc);
+u64 rrc( u8& flags, u8& acc);
 
-u64 rr(  u8& flags, u8& acc, u8 arg);
-u64 rlc( u8& flags, u8& acc, u8 arg);
-u64 rrc( u8& flags, u8& acc, u8 arg);
-
+u64 sla(u8& flags, u8& acc);
 u64 sra(u8& flags, u8& acc);
 u64 srl(u8& flags, u8& acc);
 
@@ -74,4 +71,4 @@ u64 swap(u8& flags, u8& acc);
 
 }
 
-#endif /* !APU_H */
+#endif /* !ALU_H */
