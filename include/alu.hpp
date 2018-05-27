@@ -20,54 +20,54 @@ extern const u8 kFC; // Flag Carry
 
 // move operations
 
-u64 ld8(u8& dst, u8 src);
-u64 ld16(u16& dst, u16 src);
+void ld8(u8& dst, u8 src);
+void ld16(u16& dst, u16 src);
 
 // arithmetic operations
 
-u64 add8(u8& flags, u8& acc, u8 arg);
-u64 adc8(u8& flags, u8& acc, u8 arg);
-u64 sub8(u8& flags, u8& acc, u8 arg);
-u64 sbc8(u8& flags, u8& acc, u8 arg);
-u64 inc8(u8& flags, u8& acc);
-u64 dec8(u8& flags, u8& acc);
+void add8(u8& flags, u8& acc, u8 arg);
+void adc8(u8& flags, u8& acc, u8 arg);
+void sub8(u8& flags, u8& acc, u8 arg);
+void sbc8(u8& flags, u8& acc, u8 arg);
+void inc8(u8& flags, u8& acc);
+void dec8(u8& flags, u8& acc);
 
-u64 add16(u8& flags, u16& acc, u16 arg);
-u64 sub16(u8& flags, u16& acc, u16 arg);
-u64 inc16(u8& flags, u16& acc);
-u64 dec16(u8& flags, u16& acc);
+void add16(u8& flags, u16& acc, u16 arg);
+void sub16(u8& flags, u16& acc, u16 arg);
+void inc16(u8& flags, u16& acc);
+void dec16(u8& flags, u16& acc);
 
 // logical operation
 
-u64 land(u8& flags, u8& acc, u8 arg);
-u64 lxor(u8& flags, u8& acc, u8 arg);
-u64 lor( u8& flags, u8& acc, u8 arg);
-u64 lcp( u8& flags, u8& acc, u8 arg);
+void land(u8& flags, u8& acc, u8 arg);
+void lxor(u8& flags, u8& acc, u8 arg);
+void lor( u8& flags, u8& acc, u8 arg);
+void lcp( u8& flags, u8& acc, u8 arg);
 
 // bit manipulation
 
-u64 bit(u8& flags, u8& acc, u8 arg);
-u64 set(u8& flags, u8& acc, u8 arg);
-u64 res(u8& flags, u8& acc, u8 arg);
-u64 cpl(u8& flags, u8& acc);
+void bit(u8& flags, u8& acc, u8 arg);
+void set(u8& flags, u8& acc, u8 arg);
+void res(u8& flags, u8& acc, u8 arg);
+void cpl(u8& flags, u8& acc);
 
 // bit rotation and shifts
 
-u64 rl(  u8& flags, u8& acc);
-u64 rr(  u8& flags, u8& acc);
-u64 rlc( u8& flags, u8& acc);
-u64 rrc( u8& flags, u8& acc);
+void rl(  u8& flags, u8& acc);
+void rr(  u8& flags, u8& acc);
+void rlc( u8& flags, u8& acc);
+void rrc( u8& flags, u8& acc);
 
-u64 sla(u8& flags, u8& acc);
-u64 sra(u8& flags, u8& acc);
-u64 srl(u8& flags, u8& acc);
+void sla(u8& flags, u8& acc);
+void sra(u8& flags, u8& acc);
+void srl(u8& flags, u8& acc);
 
 // misc
 
-u64 daa(u8& flags, u8& acc);
-u64 ccf(u8& flags, u8& acc);
-u64 scf(u8& flags, u8& acc);
-u64 swap(u8& flags, u8& acc);
+void daa(u8& flags, u8& acc);
+void ccf(u8& flags, u8& acc);
+void scf(u8& flags, u8& acc);
+void swap(u8& flags, u8& acc);
 
 }
 

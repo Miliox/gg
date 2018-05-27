@@ -20,17 +20,15 @@ static inline u8 cond_bitset(bool clause, u8 bits, u8 mask) {
     }
 }
 
-u64 alu::ld8(u8& dst, u8 src) {
+void alu::ld8(u8& dst, u8 src) {
     dst = src;
-    return 4;
 }
 
-u64 alu::ld16(u16& dst, u16 src) {
+void alu::ld16(u16& dst, u16 src) {
     dst = src;
-    return 8;
 }
 
-u64 alu::add8(u8& flags, u8& acc, u8 arg) {
+void alu::add8(u8& flags, u8& acc, u8 arg) {
     u16 n = acc + arg;
 
     bool z = (n & 0xff) == 0;
@@ -43,10 +41,9 @@ u64 alu::add8(u8& flags, u8& acc, u8 arg) {
     flags = cond_bitset(c, flags, alu::kFZ);
 
     acc = (u8) n;
-    return 4;
 }
 
-u64 alu::adc8(u8& flags, u8& acc, u8 arg) {
+void alu::adc8(u8& flags, u8& acc, u8 arg) {
     u8  k = (flags & alu::kFC) ? 1 : 0;
     u16 n = acc + arg + k;
 
@@ -60,10 +57,9 @@ u64 alu::adc8(u8& flags, u8& acc, u8 arg) {
     flags = cond_bitset(c, flags, alu::kFZ);
 
     acc = (u8) n;
-    return 4;
 }
 
-u64 alu::sub8(u8& flags, u8& acc, u8 arg) {
+void alu::sub8(u8& flags, u8& acc, u8 arg) {
     u8 n = acc - arg;
 
     bool z = n == 0;
@@ -76,10 +72,9 @@ u64 alu::sub8(u8& flags, u8& acc, u8 arg) {
     flags = cond_bitset(c, flags, alu::kFC);
 
     acc = n;
-    return 4;
 }
 
-u64 alu::sbc8(u8& flags, u8& acc, u8 arg) {
+void alu::sbc8(u8& flags, u8& acc, u8 arg) {
     u8 k = (flags & alu::kFC) ? 1 :0;
     u8 n = acc - arg - k;
 
@@ -93,10 +88,9 @@ u64 alu::sbc8(u8& flags, u8& acc, u8 arg) {
     flags = cond_bitset(c, flags, kFC);
 
     acc = n;
-    return 4;
 }
 
-u64 alu::inc8(u8& flags, u8& acc) {
+void alu::inc8(u8& flags, u8& acc) {
     u8 n = acc + 1;
 
     bool z = n == 0;
@@ -107,10 +101,9 @@ u64 alu::inc8(u8& flags, u8& acc) {
     flags = cond_bitset(h, flags, alu::kFH);
 
     acc = n;
-    return 4;
 }
 
-u64 alu::dec8(u8& flags, u8& acc) {
+void alu::dec8(u8& flags, u8& acc) {
     u8 n = acc - 1;
 
     bool z = n == 0;
@@ -121,10 +114,9 @@ u64 alu::dec8(u8& flags, u8& acc) {
     flags = cond_bitset(h, flags, alu::kFH);
 
     acc = n;
-    return 4;
 }
 
-u64 alu::add16(u8& flags, u16& acc, u16 arg) {
+void alu::add16(u8& flags, u16& acc, u16 arg) {
     u32 n = acc + arg;
 
     bool h = (acc & 0xff) + (arg & 0xff) & 0x100;
@@ -135,10 +127,9 @@ u64 alu::add16(u8& flags, u16& acc, u16 arg) {
     flags = cond_bitset(c, flags, alu::kFC);
 
     acc = n & 0xffff;
-    return 8;
 }
 
-u64 alu::sub16(u8& flags, u16& acc, u16 arg) {
+void alu::sub16(u8& flags, u16& acc, u16 arg) {
     u16 n = acc - arg;
 
     bool z = (n == 0);
@@ -151,20 +142,17 @@ u64 alu::sub16(u8& flags, u16& acc, u16 arg) {
     flags = cond_bitset(c, flags, alu::kFC);
 
     acc = n;
-    return 8;
 }
 
-u64 alu::inc16(u8& flags, u16& acc) {
+void alu::inc16(u8& flags, u16& acc) {
     acc += 1;
-    return 8;
 }
 
-u64 alu::dec16(u8& flags, u16& acc) {
+void alu::dec16(u8& flags, u16& acc) {
     acc -= 1;
-    return 8;
 }
 
-u64 alu::land(u8& flags, u8& acc, u8 arg) {
+void alu::land(u8& flags, u8& acc, u8 arg) {
     u8 n = acc & arg;
 
     bool z = n == 0;
@@ -175,10 +163,9 @@ u64 alu::land(u8& flags, u8& acc, u8 arg) {
     flags = cond_bitset(0, flags, alu::kFC);
 
     acc = n;
-    return 4;
 }
 
-u64 alu::lxor(u8& flags, u8& acc, u8 arg) {
+void alu::lxor(u8& flags, u8& acc, u8 arg) {
     u8 n = acc ^ arg;
 
     bool z = n == 0;
@@ -189,10 +176,9 @@ u64 alu::lxor(u8& flags, u8& acc, u8 arg) {
     flags = cond_bitset(0, flags, alu::kFC);
 
     acc = n;
-    return 4;
 }
 
-u64 alu::lor(u8& flags, u8& acc, u8 arg) {
+void alu::lor(u8& flags, u8& acc, u8 arg) {
     u8 n = acc | arg;
 
     bool z = n == 0;
@@ -202,10 +188,9 @@ u64 alu::lor(u8& flags, u8& acc, u8 arg) {
     flags = cond_bitset(0, flags, alu::kFH);
     flags = cond_bitset(0, flags, alu::kFC);
 
-    return 4;
 }
 
-u64 alu::lcp(u8& flags, u8& acc, u8 arg) {
+void alu::lcp(u8& flags, u8& acc, u8 arg) {
     u8 n = acc - arg;
 
     bool z = n == 0;
@@ -217,44 +202,39 @@ u64 alu::lcp(u8& flags, u8& acc, u8 arg) {
     flags = cond_bitset(h, flags, alu::kFH);
     flags = cond_bitset(c, flags, alu::kFC);
 
-    return 4;
 }
 
-u64 alu::bit(u8& flags, u8& acc, u8 arg) {
+void alu::bit(u8& flags, u8& acc, u8 arg) {
     bool z = acc & (1 << arg);
 
     flags = cond_bitset(z, flags, alu::kFZ);
     flags = cond_bitset(0, flags, alu::kFN);
     flags = cond_bitset(1, flags, alu::kFH);
 
-    return 8;
 }
 
-u64 alu::set(u8& flags, u8& acc, u8 arg) {
+void alu::set(u8& flags, u8& acc, u8 arg) {
     u8 n = acc | (1 << arg);
 
     acc = n;
-    return 8;
 }
 
-u64 alu::res(u8& flags, u8& acc, u8& arg) {
+void alu::res(u8& flags, u8& acc, u8 arg) {
     u8 n = acc & ~(1 << arg);
 
     acc = n;
-    return 8;
 }
 
-u64 alu::cpl(u8& flags, u8& acc) {
+void alu::cpl(u8& flags, u8& acc) {
     u8 n = ~acc;
 
     flags = cond_bitset(1, flags, alu::kFN);
     flags = cond_bitset(1, flags, alu::kFH);
 
     acc = n;
-    return 4;
 }
 
-u64 alu::rl(u8& flags, u8& acc) {
+void alu::rl(u8& flags, u8& acc) {
     bool c = acc & 0x80;
 
     u8 k = (flags & alu::kFC) ? 1 : 0;
@@ -268,10 +248,9 @@ u64 alu::rl(u8& flags, u8& acc) {
     flags = cond_bitset(c, flags, alu::kFC);
 
     acc = n;
-    return 4;
 }
 
-u64 alu::rr(u8& flags, u8& acc) {
+void alu::rr(u8& flags, u8& acc) {
     bool c = acc & 0x01;
 
     u8 k = (flags & alu::kFC) ? 0x80 : 0;
@@ -285,14 +264,13 @@ u64 alu::rr(u8& flags, u8& acc) {
     flags = cond_bitset(c, flags, alu::kFC);
 
     acc = n;
-    return 4;
 }
 
-u64 alu::rlc(u8& flags, u8& acc) {
+void alu::rlc(u8& flags, u8& acc) {
     bool c = acc & 0x80;
 
-    un8 k = c ? 1 : 0;
-    un8 n = (acc << 1) | k;
+    u8 k = c ? 1 : 0;
+    u8 n = (acc << 1) | k;
 
     bool z = n == 0;
 
@@ -303,10 +281,9 @@ u64 alu::rlc(u8& flags, u8& acc) {
     flags = cond_bitset(c, flags, alu::kFC);
 
     acc = n;
-    return 4;
 }
 
-u64 alu::rrc(u8& flags, u8& acc) {
+void alu::rrc(u8& flags, u8& acc) {
     bool c = acc & 0x01;
 
     u8 k = c ? 0x80 : 0;
@@ -321,10 +298,9 @@ u64 alu::rrc(u8& flags, u8& acc) {
 
 
     acc = n;
-    return 4;
 }
 
-u64 alu::sla(u8& flags, u8& acc) {
+void alu::sla(u8& flags, u8& acc) {
     u8 n = acc << 1;
 
     bool z = n == 0;
@@ -336,10 +312,9 @@ u64 alu::sla(u8& flags, u8& acc) {
     flags = cond_bitset(c, flags, alu::kFC);
 
     acc = n;
-    return 4;
 }
 
-u64 alu::sra(u8& flags, u8& acc) {
+void alu::sra(u8& flags, u8& acc) {
     u8 n = (acc >> 1) | (acc & 0x80);
 
     bool z = n == 0;
@@ -350,10 +325,9 @@ u64 alu::sra(u8& flags, u8& acc) {
     flags = cond_bitset(0, flags, alu::kFC);
 
     acc = n;
-    return 4;
 }
 
-u64 alu::srl(u8& flags, u8& acc) {
+void alu::srl(u8& flags, u8& acc) {
     u8 n = acc >> 1;
 
     bool z = n == 0;
@@ -365,5 +339,4 @@ u64 alu::srl(u8& flags, u8& acc) {
     flags = cond_bitset(c, flags, alu::kFC);
 
     acc = n;
-    return 4;
 }
