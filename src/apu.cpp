@@ -97,7 +97,7 @@ u64 apu::sbc8(u8& flags, u8& acc, u8 arg) {
 }
 
 u64 apu::inc8(u8& flags, u8& acc) {
-    u8 n = acc++;
+    u8 n = acc + 1;
 
     bool z = n == 0;
     bool h = acc == 0xf;
@@ -111,7 +111,7 @@ u64 apu::inc8(u8& flags, u8& acc) {
 }
 
 u64 apu::dec8(u8& flags, u8& acc) {
-    u8 n = acc--;
+    u8 n = acc - 1;
 
     bool z = n == 0;
     bool h = acc & 0x10;
@@ -122,4 +122,44 @@ u64 apu::dec8(u8& flags, u8& acc) {
 
     acc = n;
     return 4;
+}
+
+u64 apu::add16(u8& flags, u16& acc, u16 arg) {
+    u32 n = acc + arg;
+
+    bool h = (acc & 0xff) + (arg & 0xff) & 0x100;
+    bool c = n > 0xffff;
+
+    flags = cond_bitset(0, flags, apu::kFN);
+    flags = cond_bitset(h, flags, apu::kFH);
+    flags = cond_bitset(c, flags, apu::kFC);
+
+    acc = n & 0xffff;
+    return 8;
+}
+
+u64 apu::sub16(u8& flags, u16& acc, u16 arg) {
+    u16 n = acc - arg;
+
+    bool z = (n == 0);
+    bool h = (acc & 0xff) < (arg & 0xff);
+    bool c = (acc < arg);
+
+    flags = cond_bitset(z, flags, apu::kFZ);
+    flags = cond_bitset(1, flags, apu::kFN);
+    flags = cond_bitset(h, flags, apu::kFH);
+    flags = cond_bitset(c, flags, apu::kFC);
+
+    acc = n;
+    return 8;
+}
+
+u64 apu::inc16(u8& flags, u16& acc, u16 arg) {
+    acc += 1;
+    return 8;
+}
+
+u64 apu::dec16(u8& flags, u16& acc, u16 arg) {
+    acc -= 1;
+    return 8;
 }

@@ -33,9 +33,7 @@ u64 inc8(u8& flags, u8& acc);
 u64 dec8(u8& flags, u8& acc);
 
 u64 add16(u8& flags, u16& acc, u16 arg);
-u64 adc16(u8& flags, u16& acc, u16 arg);
 u64 sub16(u8& flags, u16& acc, u16 arg);
-u64 sbc16(u8& flags, u16& acc, u16 arg);
 u64 inc16(u8& flags, u16& acc);
 u64 dec16(u8& flags, u16& acc);
 
