@@ -10,7 +10,7 @@
 
 #include "common.h"
 
-namespace apu {
+namespace alu {
 
 // flags
 extern const u8 kFZ; // Flag Zero
