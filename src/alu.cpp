@@ -219,3 +219,37 @@ u64 alu::lcp(u8& flags, u8& acc, u8 arg) {
 
     return 4;
 }
+
+u64 alu::bit(u8& flags, u8& acc, u8 arg) {
+    bool z = acc & (1 << arg);
+
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(1, flags, alu::kFH);
+
+    return 8;
+}
+
+u64 alu::set(u8& flags, u8& acc, u8 arg) {
+    u8 n = acc | (1 << arg);
+
+    acc = n;
+    return 8;
+}
+
+u64 alu::res(u8& flags, u8& acc, u8& arg) {
+    u8 n = acc & ~(1 << arg);
+
+    acc = n;
+    return 8;
+}
+
+u64 alu::cpl(u8& flags, u8& acc) {
+    u8 n = ~acc;
+
+    flags = cond_bitset(1, flags, alu::kFN);
+    flags = cond_bitset(1, flags, alu::kFH);
+
+    acc = n;
+    return 4;
+}

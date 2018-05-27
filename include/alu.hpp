@@ -46,8 +46,12 @@ u64 lcp( u8& flags, u8& acc, u8 arg);
 
 // bit manipulation
 
-u64 sra(u8& flags, u8& acc);
-u64 srl(u8& flags, u8& acc);
+u64 bit(u8& flags, u8& acc, u8 arg);
+u64 set(u8& flags, u8& acc, u8 arg);
+u64 res(u8& flags, u8& acc, u8 arg);
+u64 cpl(u8& flags, u8& acc);
+
+// bit rotation and shifts
 
 u64 rla( u8& flags, u8& acc);
 u64 rra( u8& flags, u8& acc);
@@ -58,14 +62,15 @@ u64 rr(  u8& flags, u8& acc, u8 arg);
 u64 rlc( u8& flags, u8& acc, u8 arg);
 u64 rrc( u8& flags, u8& acc, u8 arg);
 
-u64 bit(u8& flags, u8& acc, u8 arg);
-u64 set(u8& flags, u8& acc, u8 arg);
-u64 res(u8& flags, u8& acc, u8 arg);
-u64 cpl(u8& flags, u8& acc);
+u64 sra(u8& flags, u8& acc);
+u64 srl(u8& flags, u8& acc);
 
-u64 swap(u8& flags, u8& acc, u8 arg);
-u64 scf(u8& flags, u8& acc);
+// misc
+
+u64 daa(u8& flags, u8& acc);
 u64 ccf(u8& flags, u8& acc);
+u64 scf(u8& flags, u8& acc);
+u64 swap(u8& flags, u8& acc);
 
 }
 
