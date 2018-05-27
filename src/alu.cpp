@@ -38,7 +38,7 @@ void alu::add8(u8& flags, u8& acc, u8 arg) {
     flags = cond_bitset(z, flags, alu::kFZ);
     flags = cond_bitset(0, flags, alu::kFN);
     flags = cond_bitset(h, flags, alu::kFH);
-    flags = cond_bitset(c, flags, alu::kFZ);
+    flags = cond_bitset(c, flags, alu::kFC);
 
     acc = (u8) n;
 }
@@ -54,7 +54,7 @@ void alu::adc8(u8& flags, u8& acc, u8 arg) {
     flags = cond_bitset(z, flags, alu::kFZ);
     flags = cond_bitset(0, flags, alu::kFN);
     flags = cond_bitset(h, flags, alu::kFH);
-    flags = cond_bitset(c, flags, alu::kFZ);
+    flags = cond_bitset(c, flags, alu::kFC);
 
     acc = (u8) n;
 }
@@ -84,8 +84,8 @@ void alu::sbc8(u8& flags, u8& acc, u8 arg) {
 
     flags = cond_bitset(z, flags, alu::kFZ);
     flags = cond_bitset(1, flags, alu::kFN);
-    flags = cond_bitset(h, flags, kFH);
-    flags = cond_bitset(c, flags, kFC);
+    flags = cond_bitset(h, flags, alu::kFH);
+    flags = cond_bitset(c, flags, alu::kFC);
 
     acc = n;
 }
