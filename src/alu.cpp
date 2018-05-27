@@ -163,3 +163,59 @@ u64 alu::dec16(u8& flags, u16& acc) {
     acc -= 1;
     return 8;
 }
+
+u64 alu::land(u8& flags, u8& acc, u8 arg) {
+    u8 n = acc & arg;
+
+    bool z = n == 0;
+
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(1, flags, alu::kFH);
+    flags = cond_bitset(0, flags, alu::kFC);
+
+    acc = n;
+    return 4;
+}
+
+u64 alu::lxor(u8& flags, u8& acc, u8 arg) {
+    u8 n = acc ^ arg;
+
+    bool z = n == 0;
+
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(0, flags, alu::kFH);
+    flags = cond_bitset(0, flags, alu::kFC);
+
+    acc = n;
+    return 4;
+}
+
+u64 alu::lor(u8& flags, u8& acc, u8 arg) {
+    u8 n = acc | arg;
+
+    bool z = n == 0;
+
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(0, flags, alu::kFH);
+    flags = cond_bitset(0, flags, alu::kFC);
+
+    return 4;
+}
+
+u64 alu::lcp(u8& flags, u8& acc, u8 arg) {
+    u8 n = acc - arg;
+
+    bool z = n == 0;
+    bool h = (acc & 0xf) < (arg & 0xf);
+    bool c = acc < arg;
+
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(1, flags, alu::kFN);
+    flags = cond_bitset(h, flags, alu::kFH);
+    flags = cond_bitset(c, flags, alu::kFC);
+
+    return 4;
+}
