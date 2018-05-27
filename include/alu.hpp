@@ -64,9 +64,9 @@ void srl(u8& flags, u8& acc);
 
 // misc
 
+void ccf(u8& flags);
+void scf(u8& flags);
 void daa(u8& flags, u8& acc);
-void ccf(u8& flags, u8& acc);
-void scf(u8& flags, u8& acc);
 void swap(u8& flags, u8& acc);
 
 }

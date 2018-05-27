@@ -340,3 +340,76 @@ void alu::srl(u8& flags, u8& acc) {
 
     acc = n;
 }
+
+void alu::daa(u8& flags, u8& acc) {
+    /*
+    // https://www.reddit.com/r/EmuDev/comments/4ycoix/a_guide_to_the_gameboys_halfcarry_flag/
+    u = 0;
+    if (FH || (!FN && (RA & 0xf) > 9)) {
+        u = 6;
+    }
+    if (FC || (!FN && RA > 0x99)) {
+        u |= 0x60;
+        FC = 1;
+    }
+    RA += FN ? -u : u;
+    FZ_EQ0(RA);
+    FH = 0;
+    */
+
+    u8 k = 0;
+
+
+    bool z = (flags & alu::kFZ);
+    bool n = (flags & alu::kFN);
+    bool h = (flags & alu::kFH);
+    bool c = (flags & alu::kFC);
+
+    if (h || (!n && ((acc & 0x0f) > 0x09))) {
+        k = 0x06;
+    }
+
+    if (c || (!n && acc > 0x99)) {
+        k |= 0x60;
+        c = 1;
+    }
+
+    if (n) {
+        acc -= k;
+    } else {
+        acc += k;
+    }
+
+    z = acc == 0;
+    h = 0;
+
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(n, flags, alu::kFN);
+    flags = cond_bitset(0, flags, alu::kFH);
+    flags = cond_bitset(c, flags, alu::kFC);
+
+}
+
+void alu::ccf(u8& flags) {
+    bool c = !(flags & alu::kFC);
+
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(0, flags, alu::kFH);
+    flags = cond_bitset(c, flags, alu::kFC);
+}
+
+void alu::scf(u8& flags) {
+    flags = cond_bitset(1, flags, alu::kFC);
+}
+
+void alu::swap(u8& flags, u8& acc) {
+    u8 n = ((acc << 4) & 0xf0) | ((acc >> 4) & 0x0f);
+
+    bool z = n == 0;
+    flags = cond_bitset(z, flags, alu::kFZ);
+    flags = cond_bitset(0, flags, alu::kFN);
+    flags = cond_bitset(0, flags, alu::kFH);
+    flags = cond_bitset(0, flags, alu::kFC);
+
+    acc = n;
+}
