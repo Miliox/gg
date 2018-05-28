@@ -119,7 +119,7 @@ void alu::dec8(u8& flags, u8& acc) {
 void alu::add16(u8& flags, u16& acc, u16 arg) {
     u32 n = acc + arg;
 
-    bool h = (acc & 0xff) + (arg & 0xff) & 0x100;
+    bool h = ((acc & 0xff) + (arg & 0xff)) > 0xff;
     bool c = n > 0xffff;
 
     flags = cond_bitset(0, flags, alu::kFN);
@@ -318,11 +318,12 @@ void alu::sra(u8& flags, u8& acc) {
     u8 n = (acc >> 1) | (acc & 0x80);
 
     bool z = n == 0;
+    bool c = acc & 1;
 
     flags = cond_bitset(z, flags, alu::kFZ);
     flags = cond_bitset(0, flags, alu::kFN);
     flags = cond_bitset(0, flags, alu::kFH);
-    flags = cond_bitset(0, flags, alu::kFC);
+    flags = cond_bitset(c, flags, alu::kFC);
 
     acc = n;
 }
