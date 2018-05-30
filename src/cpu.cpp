@@ -1594,4 +1594,557 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
     isa.at(0xff) = [&]() {
         return 16;
     };
+
+    // CB PREFIX
+
+    // RLC B
+    isa.at(0x100) = [&]() {
+        alu::rlc(r.f, r.b);
+        return 8;
+    };
+
+    // RLC C
+    isa.at(0x101) = [&]() {
+        alu::rlc(r.f, r.c);
+        return 8;
+    };
+
+    // RLC D
+    isa.at(0x102) = [&]() {
+        alu::rlc(r.f, r.d);
+        return 8;
+    };
+
+    // RLC E
+    isa.at(0x103) = [&]() {
+        alu::rlc(r.f, r.e);
+        return 8;
+    };
+
+    // RLC H
+    isa.at(0x104) = [&]() {
+        alu::rlc(r.f, r.h);
+        return 8;
+    };
+
+    // RLC L
+    isa.at(0x105) = [&]() {
+        alu::rlc(r.f, r.l);
+        return 8;
+    };
+
+    // RLC (HL)
+    isa.at(0x106) = [&]() {
+        u8 v = read8(r.hl);
+        alu::rlc(r.f, v);
+        write8(r.hl, v);
+        return 16;
+    };
+
+    // RLC A
+    isa.at(0x107) = [&]() {
+        alu::rlc(r.f, r.a);
+        return 8;
+    };
+
+    // RRC B
+    isa.at(0x108) = [&]() {
+        alu::rrc(r.f, r.b);
+        return 8;
+    };
+
+    // RRC C
+    isa.at(0x109) = [&]() {
+        alu::rrc(r.f, r.c);
+        return 8;
+    };
+
+    // RRC D
+    isa.at(0x10a) = [&]() {
+        alu::rrc(r.f, r.d);
+        return 8;
+    };
+
+    // RRC E
+    isa.at(0x10b) = [&]() {
+        alu::rrc(r.f, r.e);
+        return 8;
+    };
+
+    // RRC H
+    isa.at(0x10c) = [&]() {
+        alu::rrc(r.f, r.h);
+        return 8;
+    };
+
+    // RRC L
+    isa.at(0x10d) = [&]() {
+        alu::rrc(r.f, r.l);
+        return 8;
+    };
+
+    // RRC (HL)
+    isa.at(0x10e) = [&]() {
+        u8 v = read8(r.hl);
+        alu::rrc(r.f, v);
+        write8(r.hl, v);
+        return 16;
+    };
+
+    // RRC A
+    isa.at(0x10f) = [&]() {
+        alu::rrc(r.f, r.a);
+        return 8;
+    };
+
+    // RL B
+    isa.at(0x110) = [&]() {
+        alu::rl(r.f, r.b);
+        return 8;
+    };
+
+    // RL C
+    isa.at(0x111) = [&]() {
+        alu::rl(r.f, r.c);
+        return 8;
+    };
+
+    // RL D
+    isa.at(0x112) = [&]() {
+        alu::rl(r.f, r.d);
+        return 8;
+    };
+
+    // RL E
+    isa.at(0x113) = [&]() {
+        alu::rl(r.f, r.e);
+        return 8;
+    };
+
+    // RL H
+    isa.at(0x114) = [&]() {
+        alu::rl(r.f, r.h);
+        return 8;
+    };
+
+    // RL L
+    isa.at(0x115) = [&]() {
+        alu::rl(r.f, r.l);
+        return 8;
+    };
+
+    // RL (HL)
+    isa.at(0x116) = [&]() {
+        u8 v = read8(r.hl);
+        alu::rl(r.f, v);
+        write8(r.hl, v);
+        return 8;
+    };
+
+    // RL A
+    isa.at(0x117) = [&]() {
+        alu::rl(r.f, r.a);
+        return 8;
+    };
+
+
+    // RR B
+    isa.at(0x118) = [&]() {
+        alu::rr(r.f, r.b);
+        return 8;
+    };
+
+    // RR C
+    isa.at(0x119) = [&]() {
+        alu::rr(r.f, r.c);
+        return 8;
+    };
+
+    // RR D
+    isa.at(0x11a) = [&]() {
+        alu::rr(r.f, r.d);
+        return 8;
+    };
+
+    // RR E
+    isa.at(0x11b) = [&]() {
+        alu::rr(r.f, r.e);
+        return 8;
+    };
+
+    // RR H
+    isa.at(0x11c) = [&]() {
+        alu::rr(r.f, r.h);
+        return 8;
+    };
+
+    // RR L
+    isa.at(0x11d) = [&]() {
+        alu::rr(r.f, r.l);
+        return 8;
+    };
+
+    // RR (HL)
+    isa.at(0x11e) = [&]() {
+        u8 v = read8(r.hl);
+        alu::rr(r.f, v);
+        write8(r.hl, v);
+        return 16;
+    };
+
+    // RR A
+    isa.at(0x11f) = [&]() {
+        alu::rr(r.f, r.a);
+        return 8;
+    };
+
+    // SLA B
+    isa.at(0x120) = [&]() {
+        alu::sla(r.f, r.b);
+        return 8;
+    };
+
+    // SLA C
+    isa.at(0x121) = [&]() {
+        alu::sla(r.f, r.c);
+        return 8;
+    };
+
+    // SLA D
+    isa.at(0x122) = [&]() {
+        alu::sla(r.f, r.d);
+        return 8;
+    };
+
+    // SLA E
+    isa.at(0x123) = [&]() {
+        alu::sla(r.f, r.e);
+        return 8;
+    };
+
+    // SLA H
+    isa.at(0x124) = [&]() {
+        alu::sla(r.f, r.h);
+        return 8;
+    };
+
+    // SLA L
+    isa.at(0x125) = [&]() {
+        alu::sla(r.f, r.l);
+        return 8;
+    };
+
+    // SLA (HL)
+    isa.at(0x126) = [&]() {
+        u8 v = read8(r.hl);
+        alu::sla(r.f, v);
+        write8(r.hl, v);
+        return 16;
+    };
+
+    // SLA A
+    isa.at(0x127) = [&]() {
+        alu::sla(r.f, r.a);
+        return 8;
+    };
+
+
+    // SRA B
+    isa.at(0x128) = [&]() {
+        alu::sra(r.f, r.b);
+        return 8;
+    };
+
+    // SRA C
+    isa.at(0x129) = [&]() {
+        alu::sra(r.f, r.c);
+        return 8;
+    };
+
+    // SRA D
+    isa.at(0x12a) = [&]() {
+        alu::sra(r.f, r.d);
+        return 8;
+    };
+
+    // SRA E
+    isa.at(0x12b) = [&]() {
+        alu::sra(r.f, r.e);
+        return 8;
+    };
+
+    // SRA H
+    isa.at(0x12c) = [&]() {
+        alu::sra(r.f, r.h);
+        return 8;
+    };
+
+    // SRA L
+    isa.at(0x12d) = [&]() {
+        alu::sra(r.f, r.l);
+        return 8;
+    };
+
+    // SRA (HL)
+    isa.at(0x12e) = [&]() {
+        u8 v = read8(r.hl);
+        alu::sra(r.f, v);
+        write8(r.hl, v);
+        return 16;
+    };
+
+    // SRA A
+    isa.at(0x12f) = [&]() {
+        alu::sra(r.f, r.b);
+        return 8;
+    };
+
+    // SWAP B
+    isa.at(0x130) = [&]() {
+        alu::swap(r.f, r.b);
+        return 8;
+    };
+
+    // SWAP C
+    isa.at(0x131) = [&]() {
+        alu::swap(r.f, r.c);
+        return 8;
+    };
+
+    // SWAP D
+    isa.at(0x132) = [&]() {
+        alu::swap(r.f, r.d);
+        return 8;
+    };
+
+    // SWAP E
+    isa.at(0x133) = [&]() {
+        alu::swap(r.f, r.e);
+        return 8;
+    };
+
+    // SWAP H
+    isa.at(0x134) = [&]() {
+        alu::swap(r.f, r.h);
+        return 8;
+    };
+
+    // SWAP L
+    isa.at(0x135) = [&]() {
+        alu::swap(r.f, r.l);
+        return 8;
+    };
+
+    // SWAP (HL)
+    isa.at(0x136) = [&]() {
+        u8 v = read8(r.hl);
+        alu::swap(r.f, v);
+        write8(r.hl, v);
+        return 16;
+    };
+
+    // SWAP A
+    isa.at(0x137) = [&]() {
+        alu::swap(r.f, r.a);
+        return 8;
+    };
+
+
+    // SRL B
+    isa.at(0x138) = [&]() {
+        alu::srl(r.f, r.b);
+        return 8;
+    };
+
+    // SRL C
+    isa.at(0x139) = [&]() {
+        alu::srl(r.f, r.c);
+        return 8;
+    };
+
+    // SRL D
+    isa.at(0x13a) = [&]() {
+        alu::srl(r.f, r.d);
+        return 8;
+    };
+
+    // SRL E
+    isa.at(0x13b) = [&]() {
+        alu::srl(r.f, r.e);
+        return 8;
+    };
+
+    // SRL H
+    isa.at(0x13c) = [&]() {
+        alu::srl(r.f, r.h);
+        return 8;
+    };
+
+    // SRL L
+    isa.at(0x13d) = [&]() {
+        alu::srl(r.f, r.l);
+        return 8;
+    };
+
+    // SRL (HL)
+    isa.at(0x13e) = [&]() {
+        u8 v = read8(r.hl);
+        alu::srl(r.f, v);
+        write8(r.hl, v);
+        return 16;
+    };
+
+    // SRL A
+    isa.at(0x13f) = [&]() {
+        alu::srl(r.f, r.a);
+        return 8;
+    };
+
+    {
+        u16 opcode = 0x140;
+
+        // RES [0x140~0x17F]
+        assert(opcode == 0x140);
+
+        for (u8 i = 0; i < 8; i ++) {
+            isa.at(opcode++) = [this,i]() {
+                alu::bit(r.f, r.b, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::bit(r.f, r.c, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::bit(r.f, r.d, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::bit(r.f, r.e, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::bit(r.f, r.h, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::bit(r.f, r.l, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                u8 v = read8(r.hl);
+                alu::bit(r.f, v, i);
+                write8(r.hl, v);
+                return 16;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::bit(r.f, r.a, i);
+                return 8;
+            };
+        }
+
+        // RES [0x180~0x1BF]
+        assert(opcode == 0x180);
+
+        for (u8 i = 0; i < 8; i ++) {
+            isa.at(opcode++) = [this,i]() {
+                alu::res(r.f, r.b, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::res(r.f, r.c, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::res(r.f, r.d, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::res(r.f, r.e, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::res(r.f, r.h, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::res(r.f, r.l, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                u8 v = read8(r.hl);
+                alu::res(r.f, v, i);
+                write8(r.hl, v);
+                return 16;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::res(r.f, r.a, i);
+                return 8;
+            };
+        }
+
+        // SET [0x1C0~0x1FF]
+        assert(opcode == 0x1C0);
+
+        for (u8 i = 0; i < 8; i ++) {
+            isa.at(opcode++) = [this,i]() {
+                alu::set(r.f, r.b, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::set(r.f, r.c, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::set(r.f, r.d, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::set(r.f, r.e, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::set(r.f, r.h, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::set(r.f, r.l, i);
+                return 8;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                u8 v = read8(r.hl);
+                alu::set(r.f, v, i);
+                write8(r.hl, v);
+                return 16;
+            };
+
+            isa.at(opcode++) = [this,i]() {
+                alu::set(r.f, r.a, i);
+                return 8;
+            };
+        }
+
+        assert(opcode == 0x200);
+    }
+
 }
