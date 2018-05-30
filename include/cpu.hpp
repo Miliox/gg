@@ -84,6 +84,12 @@ private:
 
     void mwrite8(u8 addr, u8 val);
     void mwrite16(u8 addr, u16 val);
+
+    void call(u16 addr);
+    void rst( u16 addr);
+
+    void push(u16& reg);
+    void pop( u16& reg);
 };
 
 #endif /* !CPU_HPP */

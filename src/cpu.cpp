@@ -38,6 +38,22 @@ void CPU::write16(u16 addr, u16 val) {
     // TODO: MMU
 }
 
+void CPU::call(u16 addr) {
+
+}
+
+void CPU::rst(u16 addr) {
+
+}
+
+void CPU::push(u16& reg) {
+
+}
+
+void CPU::pop(u16& reg) {
+
+}
+
 u8 CPU::mread8(u8 addr) {
     return read8(0xff00 + addr);
 }
@@ -1244,6 +1260,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // POP BC
     isa.at(0xc1) = [&]() {
+        pop(r.bc);
         return 12;
     };
 
@@ -1266,11 +1283,16 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
     // CALL NZ,a16
     isa.at(0xc4) = [&]() {
         u16 addr = read16();
+        if ((r.f & alu::kFZ) == 0) {
+            call(addr);
+            return 24;
+        }
         return 12;
     };
 
     // PUSH BC
     isa.at(0xc5) = [&]() {
+        push(r.bc);
         return 16;
     };
 
@@ -1282,6 +1304,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // RST 00H
     isa.at(0xc7) = [&]() {
+        rst(0x00);
         return 16;
     };
 
@@ -1314,12 +1337,16 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
     // CALL Z,a16
     isa.at(0xcc) = [&]() {
         u16 addr = read16();
+        if ((r.f & alu::kFZ) != 0) {
+            call(addr);
+            return 12;
+        }
         return 8;
     };
 
     // CALL a16
     isa.at(0xcd) = [&]() {
-        u16 addr = read16();
+        call(read16());
         return 8;
     };
 
@@ -1331,6 +1358,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // RST 08H
     isa.at(0xcf) = [&]() {
+        rst(0x08);
         return 16;
     };
 
@@ -1342,12 +1370,17 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // POP DE
     isa.at(0xd1) = [&]() {
+        pop(r.de);
         return 12;
     };
 
     // JP NC,a16
     isa.at(0xd2) = [&]() {
         u16 addr = read16();
+        if ((r.f & alu::kFC) == 0) {
+            r.pc = addr;
+            return 16;
+        }
         return 12;
     };
 
@@ -1359,11 +1392,16 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
     // CALL NC,a16
     isa.at(0xd4) = [&]() {
         u16 addr = read16();
-        return 2;
+        if ((r.f & alu::kFC) == 0) {
+            call(addr);
+            return 24;
+        }
+        return 12;
     };
 
     // PUSH DE
     isa.at(0xd5) = [&]() {
+        push(r.de);
         return 16;
     };
 
@@ -1375,6 +1413,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // RST 10H
     isa.at(0xd7) = [&]() {
+        rst(0x10);
         return 16;
     };
 
@@ -1391,6 +1430,10 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
     // JP C,a16
     isa.at(0xda) = [&]() {
         u16 addr = read16();
+        if ((r.f & alu::kFC) != 0) {
+            r.pc = addr;
+            return 16;
+        }
         return 12;
     };
 
@@ -1402,6 +1445,10 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
     // CALL C,a16
     isa.at(0xdc) = [&]() {
         u16 addr = read16();
+        if ((r.f & alu::kFC) != 0) {
+            call(addr);
+            return 24;
+        }
         return 12;
     };
 
@@ -1418,6 +1465,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // RST 18H
     isa.at(0xdf) = [&]() {
+        rst(0x18);
         return 16;
     };
 
@@ -1429,6 +1477,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // POP HL
     isa.at(0xe1) = [&]() {
+        pop(r.hl);
         return 12;
     };
 
@@ -1450,6 +1499,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // PUSH HL
     isa.at(0xe5) = [&]() {
+        push(r.hl);
         return 16;
     };
 
@@ -1461,6 +1511,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // RST 20H
     isa.at(0xe7) = [&]() {
+        rst(0x20);
         return 16;
     };
 
@@ -1505,6 +1556,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // RST 28H
     isa.at(0xef) = [&]() {
+        rst(0x28);
         return 16;
     };
 
@@ -1516,6 +1568,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // POP AF
     isa.at(0xf1) = [&]() {
+        pop(r.af);
         return 12;
     };
 
@@ -1537,6 +1590,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // PUSH AF
     isa.at(0xf5) = [&]() {
+        push(r.af);
         return 16;
     };
 
@@ -1548,6 +1602,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // RST 30H
     isa.at(0xf7) = [&]() {
+        rst(0x30);
         return 16;
     };
 
@@ -1592,6 +1647,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // RST 38H
     isa.at(0xff) = [&]() {
+        rst(0x38);
         return 16;
     };
 
