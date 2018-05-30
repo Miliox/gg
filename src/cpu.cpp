@@ -74,6 +74,10 @@ void CPU::mwrite16(u8 addr, u16 val) {
     write16(0xff00 + addr, val);
 }
 
+Registers CPU::regdump() {
+    return r;
+}
+
 CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
     // NOP
     isa.at(0x00) = [&]() {

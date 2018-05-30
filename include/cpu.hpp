@@ -65,13 +65,16 @@ public:
 
 class CPU {
 public:
+    CPU();
+
+    Registers regdump();
+
+private:
     Registers r;
 
     // using a table of lambdas to not have to define 512 functions
     std::vector<std::function<u8()>> isa;
 
-    CPU();
-private:
     u8  read8();
     u16 read16();
 
