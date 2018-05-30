@@ -89,6 +89,7 @@ private:
 
     void call(u16 addr);
     void rst( u16 addr);
+    void ret();
 
     void push(u16& reg);
     void pop( u16& reg);

@@ -46,6 +46,10 @@ void CPU::rst(u16 addr) {
 
 }
 
+void CPU::ret() {
+
+}
+
 void CPU::push(u16& reg) {
 
 }
@@ -269,9 +273,8 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
         if ((r.f & alu::kFZ) == 0) {
             r.pc += offset;
             return 12;
-        } else {
-            return 8;
         }
+        return 8;
     };
 
     // LD HL,d16
@@ -319,12 +322,11 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
     // JR Z,r8
     isa.at(0x28) = [&]() {
         s8 offset = s8(read8());
-        if (r.f & alu::kFZ) {
+        if ((r.f & alu::kFZ) != 0) {
             r.pc += offset;
             return 12;
-        } else {
-            return 8;
         }
+        return 8;
     };
 
     // ADD HL,HL
@@ -375,9 +377,8 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
         if ((r.f & alu::kFC) == 0) {
             r.pc += offset;
             return 12;
-        } else {
-            return 8;
         }
+        return 8;
     };
 
     // LD SP,d16
@@ -430,12 +431,11 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
     // JR C,r8
     isa.at(0x38) = [&]() {
         s8 offset = s8(read8());
-        if (r.f & alu::kFC) {
+        if ((r.f & alu::kFC) != 0) {
             r.pc += offset;
             return 12;
-        } else {
-            return 8;
         }
+        return 8;
     };
 
     // ADD HL,SP
@@ -1255,6 +1255,10 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // RET NZ
     isa.at(0xc0) = [&]() {
+        if ((r.f & alu::kFZ) == 0) {
+            ret();
+            return 20;
+        }
         return 8;
     };
 
@@ -1310,12 +1314,17 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // RET Z
     isa.at(0xc8) = [&]() {
+        if ((r.f & alu::kFZ) != 0) {
+            ret();
+            return 20;
+        }
         return 8;
     };
 
     // RET
     isa.at(0xc9) = [&]() {
-        return 8;
+        ret();
+        return 16;
     };
 
     // JP Z,a16
@@ -1365,6 +1374,10 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // RET NC
     isa.at(0xd0) = [&]() {
+        if ((r.f & alu::kFC) == 0) {
+            ret();
+            return 20;
+        }
         return 8;
     };
 
@@ -1419,11 +1432,17 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // RET C
     isa.at(0xd8) = [&]() {
+        if ((r.f & alu::kFC) != 0) {
+            ret();
+            return 20;
+        }
         return 8;
     };
 
     // RETI
     isa.at(0xd9) = [&]() {
+        ret();
+        r.ie = 1;
         return 16;
     };
 
