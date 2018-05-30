@@ -58,7 +58,9 @@ public:
     u16 pc;  // program counter
     u16 sp;  // stack pointer
 
-    Registers() : af(0), bc(0), de(0), hl(0), pc(0), sp(0) {}
+    u8 ie;  // interrupt enable
+
+    Registers() : af(0), bc(0), de(0), hl(0), pc(0), sp(0), ie(0) {}
 };
 
 class CPU {

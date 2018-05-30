@@ -1580,6 +1580,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // DI
     isa.at(0xf3) = [&]() {
+        r.ie = 0;
         return 4;
     };
 
@@ -1626,6 +1627,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // EI
     isa.at(0xfb) = [&]() {
+        r.ie = 1;
         return 4;
     };
 
