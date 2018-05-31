@@ -11,9 +11,13 @@
 #include "common.h"
 
 #include <functional>
+#include <iomanip>
+#include <string>
+#include <sstream>
 #include <vector>
 
-class Registers {
+
+class Regs {
 public:
     struct {
         union {
@@ -60,17 +64,38 @@ public:
 
     u8 ie;  // interrupt enable
 
-    Registers() : af(0), bc(0), de(0), hl(0), pc(0), sp(0), ie(0) {}
+    Regs() : af(0), bc(0), de(0), hl(0), pc(0), sp(0), ie(0) {}
+
+    std::string str() {
+        std::stringstream ss;
+
+        ss << std::hex;
+        ss << "af:" << std::setw(4) << std::setfill('0') << af << " ";
+        ss << "bc:" << std::setw(4) << std::setfill('0') << bc << " ";
+        ss << "de:" << std::setw(4) << std::setfill('0') << de << " ";
+        ss << "hl:" << std::setw(4) << std::setfill('0') << hl << " ";
+        ss << "sp:" << std::setw(4) << std::setfill('0') << sp << " ";
+        ss << "pc:" << std::setw(4) << std::setfill('0') << pc << " ";
+        ss << "ie:" << static_cast<uint16_t>(ie) << " ";
+
+        ss << ((f & 0x80) ? "z" : "-");
+        ss << ((f & 0x40) ? "n" : "-");
+        ss << ((f & 0x20) ? "h" : "-");
+        ss << ((f & 0x10) ? "c" : "-");;
+
+        return ss.str();
+    }
 };
 
 class CPU {
 public:
     CPU();
 
-    Registers regdump();
+    Regs dump();
+    void restore(const Regs& regs);
 
 private:
-    Registers r;
+    Regs r;
 
     // using a table of lambdas to not have to define 512 functions
     std::vector<std::function<u8()>> isa;

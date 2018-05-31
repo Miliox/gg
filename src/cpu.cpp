@@ -74,8 +74,12 @@ void CPU::mwrite16(u8 addr, u16 val) {
     write16(0xff00 + addr, val);
 }
 
-Registers CPU::regdump() {
+Regs CPU::dump() {
     return r;
+}
+
+void CPU::restore(const Regs& regs) {
+    r = regs;
 }
 
 CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
