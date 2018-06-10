@@ -20,9 +20,12 @@ public:
     void step(u8 ticks);
 
 private:
+    u64 frames;
     u64 ticks;
 
+    std::chrono::high_resolution_clock::time_point beginTs;
     std::chrono::high_resolution_clock::time_point lastTs;
+    std::chrono::nanoseconds oversleep;
 };
 
 #endif /* !CLOCK_SYNCER_H */
