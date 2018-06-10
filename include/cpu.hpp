@@ -94,26 +94,26 @@ public:
     Regs dump();
     void restore(const Regs& regs);
 
+    // weak reference for mmu read/write
+    std::function<u8(u16)>       read8;
+    std::function<void(u16,u8&)> write8;
+
 private:
     Regs r;
 
     // using a table of lambdas to not have to define 512 functions
     std::vector<std::function<u8()>> isa;
 
-    u8  read8();
-    u16 read16();
-
-    u8  read8(u16 addr);
-    u16 read16(u16 addr);
-
-    void write8(u16 addr, u8 val);
+    u8   next8();
+    u16  next16();
+    u16  read16( u16 addr);
     void write16(u16 addr, u16 val);
 
-    u8 mread8(u8 addr);
-    u16 mread16(u8 addr);
-
-    void mwrite8(u8 addr, u8 val);
-    void mwrite16(u8 addr, u16 val);
+    // zero page read/write
+    u8   zread8(  u8 addr);
+    u16  zread16( u8 addr);
+    void zwrite8( u8 addr, u8 val);
+    void zwrite16(u8 addr, u16 val);
 
     void call(u16 addr);
     void rst( u16 addr);

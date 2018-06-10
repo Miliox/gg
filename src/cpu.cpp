@@ -8,69 +8,70 @@
 #include "cpu.hpp"
 #include "alu.hpp"
 
-u8 CPU::read8() {
-    // TODO: MMU
-    r.pc += 1;
-    return 0xff;
+u8 CPU::next8() {
+    return read8(r.pc++);
 }
 
-u16 CPU::read16() {
-    // TODO: MMU
-    r.pc += 2;
-    return 0xffff;
-}
-
-u8 CPU::read8(u16 addr) {
-    // TODO: MMU
-    return 0xff;
+u16 CPU::next16() {
+    u8 hsb = next8();
+    u8 lsb = next8();
+    return (hsb << 8) | lsb;
 }
 
 u16 CPU::read16(u16 addr) {
-    // TODO: MMU
-    return 0xffff;
-}
-
-void CPU::write8(u16 addr, u8 val) {
-    // TODO: MMU
+    u8 hsb = read8(addr++);
+    u8 lsb = read8(addr);
+    return (hsb << 8) | lsb;
 }
 
 void CPU::write16(u16 addr, u16 val) {
-    // TODO: MMU
+    u8 hsb = (val >> 8) && 0xff;
+    u8 lsb = (val & 0xff);
+
+    write8(addr++, hsb);
+    write8(addr, lsb);
 }
 
 void CPU::call(u16 addr) {
-
+    push(r.pc);
+    r.pc = addr;
 }
 
 void CPU::rst(u16 addr) {
-
+    push(r.pc);
+    r.pc = addr;
 }
 
 void CPU::ret() {
-
+    pop(r.pc);
 }
 
 void CPU::push(u16& reg) {
-
+    u8 hsb = reg >> 8;
+    u8 lsb = reg;
+    write8(r.sp--, lsb);
+    write8(r.sp--, hsb);
 }
 
 void CPU::pop(u16& reg) {
-
+    u8 hsb = read8(++r.sp);
+    u8 lsb = read8(++r.sp);
+    reg = (hsb << 8) | lsb;
 }
 
-u8 CPU::mread8(u8 addr) {
+u8 CPU::zread8(u8 addr) {
     return read8(0xff00 + addr);
 }
 
-u16 CPU::mread16(u8 addr) {
+u16 CPU::zread16(u8 addr) {
     return read16(0xff00 + addr);
 }
 
-void CPU::mwrite8(u8 addr, u8 val) {
+void CPU::zwrite8(u8 addr, u8 val) {
     write8(0xff00 + addr, val);
 }
 
-void CPU::mwrite16(u8 addr, u16 val) {
+void CPU::zwrite16(u8 addr, u16 val) {
     write16(0xff00 + addr, val);
 }
 
@@ -90,7 +91,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD BC,d16
     isa.at(0x01) = [&]() {
-        r.bc = read16();
+        r.bc = next16();
         return 12;
     };
 
@@ -120,7 +121,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD B,d8
     isa.at(0x06) = [&]() {
-        r.b = read8();
+        r.b = next8();
         return 8;
     };
 
@@ -132,7 +133,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD (a16),SP
     isa.at(0x08) = [&]() {
-        u16 addr = read16();
+        u16 addr = next16();
         write16(addr, r.sp);
         return 20;
     };
@@ -169,7 +170,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD C,d8
     isa.at(0x0e) = [&]() {
-        r.c = read8();
+        r.c = next8();
         return 8;
     };
 
@@ -187,7 +188,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD DE,d16
     isa.at(0x11) = [&]() {
-        r.de = read16();
+        r.de = next16();
         return 12;
     };
 
@@ -217,7 +218,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD D,d8
     isa.at(0x16) = [&]() {
-        r.d = read8();
+        r.d = next8();
         return 8;
     };
 
@@ -229,7 +230,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // JR r8
     isa.at(0x18) = [&](){
-        r.pc += s8(read8());
+        r.pc += s8(next8());
         return 12;
     };
 
@@ -265,7 +266,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD E,d8
     isa.at(0x1e) = [&]() {
-        r.e = read8();
+        r.e = next8();
         return 8;
     };
 
@@ -277,7 +278,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // JR NZ,r8
     isa.at(0x20) = [&]() {
-        s8 offset = s8(read8());
+        s8 offset = s8(next8());
         if ((r.f & alu::kFZ) == 0) {
             r.pc += offset;
             return 12;
@@ -287,7 +288,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD HL,d16
     isa.at(0x21) = [&]() {
-        r.hl = read16();
+        r.hl = next16();
         return 12;
     };
 
@@ -317,7 +318,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD H,d8
     isa.at(0x26) = [&]() {
-        r.h = read8();
+        r.h = next8();
         return 8;
     };
 
@@ -329,7 +330,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // JR Z,r8
     isa.at(0x28) = [&]() {
-        s8 offset = s8(read8());
+        s8 offset = s8(next8());
         if ((r.f & alu::kFZ) != 0) {
             r.pc += offset;
             return 12;
@@ -369,7 +370,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD L,d8
     isa.at(0x2e) = [&]() {
-        r.l = read8();
+        r.l = next8();
         return 8;
     };
 
@@ -381,7 +382,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // JR NC,r8
     isa.at(0x30) = [&]() {
-        s8 offset = s8(read8());
+        s8 offset = s8(next8());
         if ((r.f & alu::kFC) == 0) {
             r.pc += offset;
             return 12;
@@ -391,7 +392,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD SP,d16
     isa.at(0x31) = [&]() {
-        r.sp = read16();
+        r.sp = next16();
         return 12;
     };
 
@@ -425,7 +426,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD (HL),d8
     isa.at(0x36) = [&]() {
-        u8 v = read8();
+        u8 v = next8();
         write8(r.hl, v);
         return 12;
     };
@@ -438,7 +439,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // JR C,r8
     isa.at(0x38) = [&]() {
-        s8 offset = s8(read8());
+        s8 offset = s8(next8());
         if ((r.f & alu::kFC) != 0) {
             r.pc += offset;
             return 12;
@@ -478,7 +479,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD A,d8
     isa.at(0x3e) = [&]() {
-        r.a = read8();
+        r.a = next8();
         return 8;
     };
 
@@ -1278,7 +1279,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // JP NZ,a16
     isa.at(0xc2) = [&]() {
-        u16 addr = read16();
+        u16 addr = next16();
         if ((r.f & alu::kFZ) == 0) {
             r.pc = addr;
             return 16;
@@ -1288,13 +1289,13 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // JP a16
     isa.at(0xc3) = [&]() {
-        r.pc = read16();
+        r.pc = next16();
         return 12;
     };
 
     // CALL NZ,a16
     isa.at(0xc4) = [&]() {
-        u16 addr = read16();
+        u16 addr = next16();
         if ((r.f & alu::kFZ) == 0) {
             call(addr);
             return 24;
@@ -1310,7 +1311,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // ADD A,d8
     isa.at(0xc6) = [&]() {
-        alu::add8(r.f, r.a, read8());
+        alu::add8(r.f, r.a, next8());
         return 8;
     };
 
@@ -1337,7 +1338,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // JP Z,a16
     isa.at(0xca) = [&]() {
-        u16 addr = read16();
+        u16 addr = next16();
         if ((r.f & alu::kFZ) != 0) {
             r.pc = addr;
             return 16;
@@ -1347,13 +1348,13 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // PREFIX CB
     isa.at(0xcb) = [&]() {
-        u8 opcode = read8();
+        u8 opcode = next8();
         return 4 + isa.at(0x100 | opcode)();
     };
 
     // CALL Z,a16
     isa.at(0xcc) = [&]() {
-        u16 addr = read16();
+        u16 addr = next16();
         if ((r.f & alu::kFZ) != 0) {
             call(addr);
             return 12;
@@ -1363,13 +1364,13 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // CALL a16
     isa.at(0xcd) = [&]() {
-        call(read16());
+        call(next16());
         return 8;
     };
 
     // ADC A,d8
     isa.at(0xce) = [&]() {
-        alu::adc8(r.f, r.a, read8());
+        alu::adc8(r.f, r.a, next8());
         return 8;
     };
 
@@ -1397,7 +1398,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // JP NC,a16
     isa.at(0xd2) = [&]() {
-        u16 addr = read16();
+        u16 addr = next16();
         if ((r.f & alu::kFC) == 0) {
             r.pc = addr;
             return 16;
@@ -1412,7 +1413,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // CALL NC,a16
     isa.at(0xd4) = [&]() {
-        u16 addr = read16();
+        u16 addr = next16();
         if ((r.f & alu::kFC) == 0) {
             call(addr);
             return 24;
@@ -1428,7 +1429,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // SUB d8
     isa.at(0xd6) = [&]() {
-        alu::sub8(r.f, r.a, read8());
+        alu::sub8(r.f, r.a, next8());
         return 8;
     };
 
@@ -1456,7 +1457,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // JP C,a16
     isa.at(0xda) = [&]() {
-        u16 addr = read16();
+        u16 addr = next16();
         if ((r.f & alu::kFC) != 0) {
             r.pc = addr;
             return 16;
@@ -1471,7 +1472,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // CALL C,a16
     isa.at(0xdc) = [&]() {
-        u16 addr = read16();
+        u16 addr = next16();
         if ((r.f & alu::kFC) != 0) {
             call(addr);
             return 24;
@@ -1486,7 +1487,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // SBC A,d8
     isa.at(0xde) = [&]() {
-        alu::sbc8(r.f, r.a, read8());
+        alu::sbc8(r.f, r.a, next8());
         return 8;
     };
 
@@ -1498,7 +1499,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LDH (a8),A
     isa.at(0xe0) = [&]() {
-        mwrite8(read8(), r.a);
+        zwrite8(next8(), r.a);
         return 12;
     };
 
@@ -1510,7 +1511,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD (C),A
     isa.at(0xe2) = [&]() {
-        mwrite8(r.c, r.a);
+        zwrite8(r.c, r.a);
         return 8;
     };
 
@@ -1532,7 +1533,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // AND d8
     isa.at(0xe6) = [&]() {
-        alu::land(r.f, r.a, read8());
+        alu::land(r.f, r.a, next8());
         return 8;
     };
 
@@ -1544,7 +1545,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // ADD SP,r8
     isa.at(0xe8) = [&]() {
-        r.pc += s8(read8());
+        r.pc += s8(next8());
         return 16;
     };
 
@@ -1556,7 +1557,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD (a16),A
     isa.at(0xea) = [&]() {
-        write8(read16(), r.a);
+        write8(next16(), r.a);
         return 16;
     };
 
@@ -1577,7 +1578,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // XOR d8
     isa.at(0xee) = [&]() {
-        alu::lxor(r.f, r.a, read8());
+        alu::lxor(r.f, r.a, next8());
         return 8;
     };
 
@@ -1589,7 +1590,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LDH A,(a8)
     isa.at(0xf0) = [&]() {
-        r.a = mread8(read8());
+        r.a = zread8(next8());
         return 12;
     };
 
@@ -1601,7 +1602,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD A,(C)
     isa.at(0xf2) = [&]() {
-        r.a = mread8(r.c);
+        r.a = zread8(r.c);
         return 8;
     };
 
@@ -1624,7 +1625,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // OR d8
     isa.at(0xf6) = [&]() {
-        alu::lor(r.f, r.a, read8());
+        alu::lor(r.f, r.a, next8());
         return 8;
     };
 
@@ -1636,7 +1637,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD HL,SP+r8
     isa.at(0xf8) = [&]() {
-        r.hl = r.pc + s8(read8());
+        r.hl = r.pc + s8(next8());
         return 12;
     };
 
@@ -1648,7 +1649,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // LD A,(a16)
     isa.at(0xfa) = [&]() {
-        r.a = read8(read16());
+        r.a = read8(next16());
         return 16;
     };
 
@@ -1670,7 +1671,7 @@ CPU::CPU() : isa(512, [&]() { /*NOP*/ return 4; }) {
 
     // CP d8
     isa.at(0xfe) = [&]() {
-        alu::lcp(r.f, r.a, read8());
+        alu::lcp(r.f, r.a, next8());
         return 8;
     };
 
