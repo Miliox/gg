@@ -9,6 +9,7 @@
 
 #include "cpu.hpp"
 #include "mmu.hpp"
+#include "clock_syncer.hpp"
 
 #include <string>
 
@@ -32,15 +33,18 @@ int main(int argc, char** argv) {
     CPU cpu;
     MMU mmu;
 
+    ClockSyncer syncer;
+
     cpu.read8  = [&](u16 addr) -> u8 { return mmu.read8(addr); };
     cpu.write8 = [&](u16 addr, u8 val) { mmu.write8(addr, val); };
 
     u64 ticks = 0;
     for (;;) {
         u8 elapsed = cpu.cycle();
-        mmu.step(elapsed);
-
         ticks += elapsed;
+
+        mmu.step(elapsed);
+        syncer.step(elapsed);
     }
 
     return 0;

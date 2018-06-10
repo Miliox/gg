@@ -7,7 +7,6 @@
 
 #include "clock_syncer.hpp"
 
-#include <chrono>
 #include <thread>
 
 static const u64 kTicksPerSec  = 4'194'304;
