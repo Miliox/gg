@@ -8,6 +8,17 @@
 #include "cpu.hpp"
 #include "alu.hpp"
 
+u8 CPU::cycle() {
+    // fetch
+    auto opcode = next8();
+
+    // decode
+    auto& op = isa.at(opcode);
+
+    // execute
+    return op();
+}
+
 u8 CPU::next8() {
     return read8(r.pc++);
 }
@@ -25,7 +36,7 @@ u16 CPU::read16(u16 addr) {
 }
 
 void CPU::write16(u16 addr, u16 val) {
-    u8 hsb = (val >> 8) && 0xff;
+    u8 hsb = (val >> 8) & 0xff;
     u8 lsb = (val & 0xff);
 
     write8(addr++, hsb);

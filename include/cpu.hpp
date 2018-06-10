@@ -91,6 +91,8 @@ class CPU {
 public:
     CPU();
 
+    u8 cycle();
+
     Regs dump();
     void restore(const Regs& regs);
 

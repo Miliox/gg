@@ -87,3 +87,7 @@ void MMU::write8(u16 addr, u8 val) {
         zram.write8(addr, val);
     }
 }
+
+void MMU::step(u8 ticks) {
+
+}
