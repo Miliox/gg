@@ -16,8 +16,7 @@
 class ClockSyncer {
 public:
     ClockSyncer();
-
-    void step(u8 ticks);
+    bool step(u8 ticks);
 
 private:
     u64 frames;
